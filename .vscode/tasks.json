@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run Main Go File",
+			"type": "shell",
+			"command": "go run main.go",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"detail": "A task to run the main Go file"
+		}
+	]
+}
