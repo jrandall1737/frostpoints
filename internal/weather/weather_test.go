@@ -20,7 +20,7 @@ func TestGetWeather(t *testing.T) {
 	}{
 		{
 			name:    "Test GetWeather",
-			args:    args{105.084, 40.5853, time.Now()},
+			args:    args{40.5853, 105.084, time.Now()},
 			want:    "Temperature at 8:00 AM MT:",
 			wantErr: false,
 		},

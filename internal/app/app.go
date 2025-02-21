@@ -5,7 +5,13 @@ import (
 	"net/http"
 
 	"github.com/jrandall1737/frostpoints/internal/auth"
+	"github.com/jrandall1737/frostpoints/internal/database"
+	"github.com/jrandall1737/frostpoints/pkg/strava"
 )
+
+//go:generate go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen --config=../../assets/stravaConfig.yaml ../../assets/stravaSwagger.json
+
+const VERIFY_TOKEN = "STRAVA"
 
 func HandleRoot(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, `
@@ -17,12 +23,18 @@ func HandleRoot(w http.ResponseWriter, r *http.Request) {
 	</body></html>`)
 }
 
-func StartApp(port int) {
+func StartApp(port int, myStravaConfig strava.StravaConfig) {
+	db := database.NewDatabase()
+	stravaAuth := auth.NewStravaAuth(db, myStravaConfig)
+	stravaHandler := NewStravaWebhookHandler(db, stravaAuth)
+
+	// Serve any assets
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets"))))
 
 	http.HandleFunc("/", HandleRoot)
-	http.HandleFunc("/login", auth.HandleLogin)
-	http.HandleFunc("/callback", auth.HandleCallback)
+	http.HandleFunc("/login", stravaAuth.HandleLogin)
+	http.HandleFunc("/callback", stravaAuth.HandleCallback)
+	http.HandleFunc("/webhook", stravaHandler.HandleWebhook)
 
 	fmt.Printf("Starting server on localhost:%d\n", port)
 	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)

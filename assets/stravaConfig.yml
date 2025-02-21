@@ -1,0 +1,6 @@
+package: strava
+generate:
+  - types
+  - client
+  - server
+output: strava_api.gen.go
