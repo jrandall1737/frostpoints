@@ -19,7 +19,7 @@ import (
 
 type StravaAuth struct {
 	oauth2Config *oauth2.Config
-	db           *database.Database
+	db           database.Database
 }
 
 type StravaTokenRequest struct {
@@ -45,7 +45,7 @@ type StravaRefreshTokenResponse struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
-func NewStravaAuth(db *database.Database, config strava.StravaConfig) *StravaAuth {
+func NewStravaAuth(db database.Database, config strava.StravaConfig) *StravaAuth {
 	auth := &StravaAuth{db: db}
 	auth.SetOauthConfig(config)
 	return auth
@@ -113,7 +113,7 @@ func (s *StravaAuth) exchangeCodeForToken(code string) (*StravaTokenResponse, er
 		return nil, fmt.Errorf("failed to get athlete ID: %s", body)
 	}
 
-	s.db.AddToken(token)
+	_ = s.db.AddToken(token)
 
 	return &tokenResponse, nil
 }

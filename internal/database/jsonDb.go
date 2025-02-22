@@ -7,20 +7,20 @@ import (
 	"os"
 )
 
-// Database holds a collection of activities
-type Database struct {
+// jsonDatabase holds a collection of activities
+type jsonDatabase struct {
 	filename string
 	tokens   []UserToken
 }
 
-func NewDatabase() *Database {
-	db := &Database{filename: "tokens.json"}
+func newJsonDatabase() *jsonDatabase {
+	db := &jsonDatabase{filename: "tokens.json"}
 	db.Load()
 	return db
 }
 
 // Load reads the database from the JSON file
-func (db *Database) Load() error {
+func (db *jsonDatabase) Load() error {
 	file, err := os.Open(db.filename)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -40,7 +40,7 @@ func (db *Database) Load() error {
 	return json.Unmarshal(data, &db.tokens)
 }
 
-func (db *Database) Save() error {
+func (db *jsonDatabase) Save() error {
 	data, err := json.MarshalIndent(db.tokens, "", "  ")
 	if err != nil {
 		return err
@@ -49,7 +49,7 @@ func (db *Database) Save() error {
 	return os.WriteFile(db.filename, data, 0644)
 }
 
-func (db *Database) AddToken(token UserToken) {
+func (db *jsonDatabase) AddToken(token UserToken) {
 	if db.FindTokenById(token.AthleteId) != nil {
 		db.UpdateToken(token)
 	} else {
@@ -58,14 +58,14 @@ func (db *Database) AddToken(token UserToken) {
 	}
 }
 
-func (db *Database) ListTokens() {
+func (db *jsonDatabase) ListTokens() {
 	fmt.Println("Tokens:")
 	for _, token := range db.tokens {
 		fmt.Printf("%v\n", token)
 	}
 }
 
-func (db *Database) FindTokenById(athleteId int64) *UserToken {
+func (db *jsonDatabase) FindTokenById(athleteId int64) *UserToken {
 	for i, token := range db.tokens {
 		if token.AthleteId == athleteId {
 			return &db.tokens[i]
@@ -74,7 +74,7 @@ func (db *Database) FindTokenById(athleteId int64) *UserToken {
 	return nil
 }
 
-func (db *Database) UpdateToken(token UserToken) {
+func (db *jsonDatabase) UpdateToken(token UserToken) {
 	for i, t := range db.tokens {
 		if t.AthleteId == token.AthleteId {
 			db.tokens[i] = token
@@ -86,7 +86,7 @@ func (db *Database) UpdateToken(token UserToken) {
 	fmt.Println("Token not found.")
 }
 
-func (db *Database) DeleteToken(athleteId int64) {
+func (db *jsonDatabase) DeleteToken(athleteId int64) {
 	for i, token := range db.tokens {
 		if token.AthleteId == athleteId {
 			db.tokens = append(db.tokens[:i], db.tokens[i+1:]...)

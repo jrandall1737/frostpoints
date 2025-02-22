@@ -23,8 +23,9 @@ func HandleRoot(w http.ResponseWriter, r *http.Request) {
 	</body></html>`)
 }
 
-func StartApp(port int, myStravaConfig strava.StravaConfig) {
-	db := database.NewDatabase()
+func StartApp(port string, myStravaConfig strava.StravaConfig, dbConnectionString string) {
+	db := database.NewMongoDatabase(dbConnectionString)
+	defer db.Disconnect()
 	stravaAuth := auth.NewStravaAuth(db, myStravaConfig)
 	stravaHandler := NewStravaWebhookHandler(db, stravaAuth)
 
@@ -36,8 +37,8 @@ func StartApp(port int, myStravaConfig strava.StravaConfig) {
 	http.HandleFunc("/callback", stravaAuth.HandleCallback)
 	http.HandleFunc("/webhook", stravaHandler.HandleWebhook)
 
-	fmt.Printf("Starting server on localhost:%d\n", port)
-	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+	fmt.Printf("Starting server on localhost:%s\n", port)
+	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		panic(err)
 	}

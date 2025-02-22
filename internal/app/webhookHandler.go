@@ -13,11 +13,11 @@ import (
 )
 
 type WebhookHandler struct {
-	db   *database.Database
+	db   database.Database
 	auth *auth.StravaAuth
 }
 
-func NewStravaWebhookHandler(db *database.Database, auth *auth.StravaAuth) *WebhookHandler {
+func NewStravaWebhookHandler(db database.Database, auth *auth.StravaAuth) *WebhookHandler {
 	return &WebhookHandler{db: db, auth: auth}
 }
 
