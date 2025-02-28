@@ -75,6 +75,12 @@ func readEnvironmentVariables() {
 		myStravaConfig.ClientId = id
 	}
 
+	value, exists = os.LookupEnv("CALLBACK_URL")
+	if exists {
+		fmt.Println("Using CALLBACK_URL environment variable")
+		myStravaConfig.CallbackUrl = value
+	}
+
 	value, exists = os.LookupEnv("DB_CONNECTION_STRING")
 	if exists {
 		fmt.Println("Using DB_CONNECTION_STRING environment variable")
