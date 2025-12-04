@@ -86,9 +86,9 @@ func (wh *WebhookHandler) handleWebhookPost(w http.ResponseWriter, r *http.Reque
 
 func (wh *WebhookHandler) handleEvent(event strava.WebhookEvent) {
 	// Don't handle athlete events
-	// if event.AspectType != "create" {
-	// 	return
-	// }
+	if event.AspectType != "create" {
+		return
+	}
 
 	// get the athlete token
 	userToken := wh.db.FindTokenById(event.OwnerID)
