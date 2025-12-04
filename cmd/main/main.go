@@ -10,14 +10,11 @@ import (
 	"github.com/jrandall1737/frostpoints/pkg/strava"
 )
 
-var port string // port of local demo server
+var port string
 var myStravaConfig strava.StravaConfig
 var dbConnectionString string
 
 func main() {
-	// setup the credentials for your app
-	// These need to be set to reflect your application
-	// and can be found at https://www.strava.com/settings/api
 	flag.IntVar(&myStravaConfig.ClientId, "id", 0, "Strava Client ID")
 	flag.StringVar(&myStravaConfig.ClientSecret, "secret", "", "Strava Client Secret")
 	flag.StringVar(&myStravaConfig.CallbackUrl, "callback", "localhost", "Strava Callback URL")
@@ -25,12 +22,12 @@ func main() {
 	flag.StringVar(&dbConnectionString, "db", "", "Database connection string")
 
 	flag.Parse()
+	fmt.Println(myStravaConfig.ClientId)
 
 	readEnvironmentVariables()
 
 	if myStravaConfig.ClientId == 0 || myStravaConfig.ClientSecret == "" {
 		fmt.Println("\nPlease provide your application's client_id and client_secret.")
-		fmt.Println("For example: go run oauth_example.go -id=9 -secret=longrandomsecret")
 		fmt.Println(" ")
 
 		flag.PrintDefaults()
