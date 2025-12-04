@@ -45,9 +45,6 @@ func main() {
 	var port int
 	var myStravaId StravaId
 
-	// setup the credentials for your app
-	// These need to be set to reflect your application
-	// and can be found at https://www.strava.com/settings/api
 	flag.IntVar(&myStravaId.ClientId, "id", 0, "Strava Client ID")
 	flag.StringVar(&myStravaId.ClientSecret, "secret", "", "Strava Client Secret")
 	flag.IntVar(&port, "port", 3009, "Strava Client Secret")
